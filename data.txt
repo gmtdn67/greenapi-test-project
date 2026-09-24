@@ -1,0 +1,3 @@
+apiUrl=https://7107.api.greenapi.com
+idInstance=710722745984
+apiTokenInstance=9968c164bc2f49449fcf22e822ba57370c3f8593206a494bb2
