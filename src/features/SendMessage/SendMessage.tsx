@@ -28,9 +28,13 @@ export const SendMessage: FC<SendMessageProps> = ({
             await onSend(value);
 
             setText("");
-        } catch {
+        } catch (error) {
+            console.error(
+                "Send message error:",
+                error,
+            );
             setError(
-                "Не удалось отправить сообщение",
+                "Не удалось отправить сообщение. Попробуйте ещё раз.",
             );
         } finally {
             setIsLoading(false);
@@ -59,7 +63,7 @@ export const SendMessage: FC<SendMessageProps> = ({
                         setText(event.target.value)
                     }
                     onKeyDown={handleKeyDown}
-                    disabled={isLoading}
+                    readOnly={isLoading}
                     autoComplete="off"
                 />
 

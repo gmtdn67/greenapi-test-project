@@ -1,13 +1,25 @@
 import type { FC } from "react";
 import type { Chat } from "@/entities/chat/model/types";
+import type { ConnectionStatus } from "@/entities/connection/model/types";
 import styles from "./ChatHeader.module.scss";
 
 interface ChatHeaderProps {
     chat: Chat;
+    connectionStatus: ConnectionStatus;
 }
+
+const statusText: Record<
+    ConnectionStatus,
+    string
+> = {
+    connected: "Подключено",
+    reconnecting: "Переподключение...",
+    disconnected: "Нет подключения",
+};
 
 export const ChatHeader: FC<ChatHeaderProps> = ({
     chat,
+    connectionStatus,
 }) => {
     return (
         <header className={styles.header}>
@@ -21,7 +33,7 @@ export const ChatHeader: FC<ChatHeaderProps> = ({
                 </div>
 
                 <div className={styles.status}>
-                    WhatsApp
+                    {statusText[connectionStatus]}
                 </div>
             </div>
         </header>

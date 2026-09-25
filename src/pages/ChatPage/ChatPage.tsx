@@ -8,6 +8,12 @@ import { Sidebar } from "@/widgets/Sidebar/Sidebar";
 import { Chat } from "@/widgets/Chat/Chat";
 import { useReceiveMessages } from "@/features/ReceiveMessages/ReceiveMessages";
 import styles from "./ChatPage.module.scss";
+import { useOnlineStatus } from "@/shared/lib/hooks/useOnlineStatus";
+
+type ConnectionStatus =
+    | "connected"
+    | "reconnecting"
+    | "disconnected";
 
 interface ChatPageProps {
     config: GreenApiConfig;
@@ -15,14 +21,20 @@ interface ChatPageProps {
 
 export const ChatPage = ({ config }: ChatPageProps) => {
     const [chats, setChats] = useState<ChatEntity[]>([]);
-    const [activeChatId, setActiveChatId] =
-        useState<string | null>(null);
-
+    const [activeChatId, setActiveChatId] = useState<string | null>(null);
+    const [connectionStatus, setConnectionStatus] = useState<ConnectionStatus>("connected");
     const [messages, setMessages] = useState<Message[]>([]);
+
+    const isOnline = useOnlineStatus();
 
     const activeChat = chats.find(
         (chat) => chat.id === activeChatId,
     );
+
+    const actualConnectionStatus: ConnectionStatus =
+        !isOnline
+            ? "disconnected"
+            : connectionStatus;
 
     const handleCreateChat = (chat: ChatEntity) => {
         setChats((current) => {
@@ -152,9 +164,19 @@ export const ChatPage = ({ config }: ChatPageProps) => {
         [],
     );
 
+    const handleConnected = useCallback(() => {
+        setConnectionStatus("connected");
+    }, []);
+
+    const handleReceiveError = useCallback(() => {
+        setConnectionStatus("reconnecting");
+    }, []);
+
     useReceiveMessages({
         config,
         onMessage: handleIncomingMessage,
+        onError: handleReceiveError,
+        onConnected: handleConnected
     });
 
     const activeChatMessages = activeChat
@@ -178,6 +200,7 @@ export const ChatPage = ({ config }: ChatPageProps) => {
                 chat={activeChat}
                 messages={activeChatMessages}
                 onSendMessage={handleSendMessage}
+                connectionStatus={actualConnectionStatus}
             />
         </main>
     );
