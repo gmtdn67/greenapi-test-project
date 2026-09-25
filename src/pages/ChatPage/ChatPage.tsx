@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { GreenApiClient } from "@/shared/api/green-api/client";
 import type { GreenApiConfig } from "@/shared/types/green-api";
 import { greenApiStorage } from "@/shared/lib/green-api-storage";
@@ -6,7 +6,7 @@ import type { Chat as ChatEntity } from "@/entities/chat/model/types";
 import type { Message } from "@/entities/message/model/types";
 import { Sidebar } from "@/widgets/Sidebar/Sidebar";
 import { Chat } from "@/widgets/Chat/Chat";
-
+import { useReceiveMessages } from "@/features/ReceiveMessages/ReceiveMessages";
 import styles from "./ChatPage.module.scss";
 
 interface ChatPageProps {
@@ -85,13 +85,85 @@ export const ChatPage = ({ config }: ChatPageProps) => {
         window.location.reload();
     };
 
+    const handleIncomingMessage = useCallback(
+        (message: Message) => {
+            setMessages((current) => {
+                const exists = current.some(
+                    (item) =>
+                        item.id === message.id,
+                );
+
+                if (exists) {
+                    return current;
+                }
+
+                return [
+                    ...current,
+                    message,
+                ];
+            });
+
+            setChats((current) => {
+                const existingChat =
+                    current.find(
+                        (chat) =>
+                            chat.id ===
+                            message.chatId,
+                    );
+
+                if (existingChat) {
+                    return current.map(
+                        (chat) =>
+                            chat.id ===
+                            message.chatId
+                                ? {
+                                    ...chat,
+
+                                    lastMessage:
+                                        message.text,
+
+                                    lastMessageTimestamp:
+                                        message.timestamp,
+                                }
+                                : chat,
+                    );
+                }
+
+                const phone =
+                    message.chatId.replace(
+                        "@c.us",
+                        "",
+                    );
+
+                return [
+                    ...current,
+                    {
+                        id: message.chatId,
+                        phone,
+                        title: `+${phone}`,
+                        lastMessage:
+                            message.text,
+                        lastMessageTimestamp:
+                            message.timestamp,
+                    },
+                ];
+            });
+        },
+        [],
+    );
+
+    useReceiveMessages({
+        config,
+        onMessage: handleIncomingMessage,
+    });
+
     const activeChatMessages = activeChat
         ? messages.filter(
               (message) =>
                   message.chatId === activeChat.id,
           )
         : [];
-
+    
     return (
         <main className={styles.page}>
             <Sidebar

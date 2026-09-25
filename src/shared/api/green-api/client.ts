@@ -84,4 +84,14 @@ export class GreenApiClient {
 
         return response.data;
     }
+
+    async deleteNotification(
+        receiptId: number,
+    ): Promise<boolean> {
+        const response = await this.client.delete<boolean>(
+            `${this.getUrl("deleteNotification")}/${receiptId}`,
+        );
+
+        return response.data;
+    }
 }
