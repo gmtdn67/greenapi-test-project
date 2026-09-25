@@ -11,7 +11,7 @@ export function AuthForm() {
             const api = new GreenApiClient(data);
 
             const result = await api.getStateInstance();
-
+            
             console.log("GREEN-API:", result);
         } catch (error) {
             console.error(error);
