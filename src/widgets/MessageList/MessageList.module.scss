@@ -1,43 +1,59 @@
 .list {
-  flex: 1;
+    flex: 1;
 
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 
-  padding: 20px;
+    padding: 20px;
 
-  overflow-y: auto;
+    overflow-y: auto;
 }
 
 .message {
-  max-width: 65%;
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
 
-  padding: 8px 12px;
+    max-width: 65%;
 
-  border-radius: 8px;
+    padding: 8px 10px;
 
-  line-height: 1.4;
+    border-radius: 8px;
+
+    line-height: 1.4;
+
+    span {
+        overflow-wrap: anywhere;
+    }
+
+    time {
+        flex-shrink: 0;
+
+        color: #777;
+
+        font-size: 11px;
+    }
 }
 
 .incoming {
-  align-self: flex-start;
+    align-self: flex-start;
 
-  background: #fff;
+    background: #fff;
 }
 
 .outgoing {
-  align-self: flex-end;
+    align-self: flex-end;
 
-  background: #d9fdd3;
+    background: #d9fdd3;
 }
 
 .empty {
-  flex: 1;
+    flex: 1;
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-  color: #888;
+    color: #888;
 }

@@ -1,0 +1,62 @@
+.container {
+    padding: 8px 16px 12px;
+
+    background: #f0f0f0;
+}
+
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    input {
+        flex: 1;
+
+        min-width: 0;
+        height: 44px;
+
+        padding: 0 16px;
+
+        border: 0;
+        border-radius: 22px;
+
+        outline: none;
+
+        font: inherit;
+
+        background: #fff;
+
+        &:disabled {
+            opacity: 0.6;
+        }
+    }
+
+    button {
+        width: 44px;
+        height: 44px;
+
+        flex: 0 0 44px;
+
+        border: 0;
+        border-radius: 50%;
+
+        background: #111;
+        color: #fff;
+
+        cursor: pointer;
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+    }
+}
+
+.error {
+    margin-top: 6px;
+    padding-left: 8px;
+
+    color: #c62828;
+
+    font-size: 12px;
+}

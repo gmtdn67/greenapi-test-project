@@ -1,69 +1,87 @@
 import axios from "axios";
 import type { AxiosInstance } from "axios";
+import type {
+    GreenApiConfig,
+} from "@/shared/types/green-api";
 
 import type {
-  GetStateInstanceResponse,
-  GreenApiInstanceState,
-  ReceiveNotificationResponse,
-  SendMessageRequest,
-  SendMessageResponse,
+    GetStateInstanceResponse,
+    SendMessageRequest,
+    SendMessageResponse,
+    ReceiveNotificationResponse,
 } from "./types";
 
-import type { GreenApiConfig } from "@/shared/types/green-api";
-
 export class GreenApiClient {
-  private readonly client: AxiosInstance;
-  private readonly idInstance: string;
-  private readonly apiTokenInstance: string;
+    private readonly client: AxiosInstance;
 
-  constructor(config: GreenApiConfig) {
-    this.idInstance = config.idInstance;
-    this.apiTokenInstance = config.apiTokenInstance;
+    private readonly idInstance: string;
 
-    this.client = axios.create({
-      baseURL: config.apiUrl,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-  }
+    private readonly apiTokenInstance: string;
 
-  private getUrl(method: string): string {
-    return `/waInstance${this.idInstance}/${method}/${this.apiTokenInstance}`;
-  }
+    constructor(config: GreenApiConfig) {
+        this.idInstance =
+            config.idInstance;
 
-  async getStateInstance(): Promise<GreenApiInstanceState> {
-    const response = await this.client.get<GetStateInstanceResponse>(
-      this.getUrl("getStateInstance"),
-    );
+        this.apiTokenInstance =
+            config.apiTokenInstance;
 
-    return response.data.stateInstance;
-  }
+        this.client = axios.create({
+            baseURL: config.apiUrl,
+            headers: {
+                "Content-Type":
+                    "application/json",
+            },
+        });
+    }
 
-  async sendMessage(
-    data: SendMessageRequest,
-  ): Promise<SendMessageResponse> {
-    const response = await this.client.post<SendMessageResponse>(
-      this.getUrl("sendMessage"),
-      data,
-    );
+    private getUrl(method: string) {
+        return `/waInstance${this.idInstance}/${method}/${this.apiTokenInstance}`;
+    }
 
-    return response.data;
-  }
+    async getStateInstance() {
+        const response =
+            await this.client.get<GetStateInstanceResponse>(
+                this.getUrl(
+                    "getStateInstance",
+                ),
+            );
 
-  async receiveNotification(
-    receiveTimeout = 5,
-  ): Promise<ReceiveNotificationResponse | null> {
-    const response =
-      await this.client.get<ReceiveNotificationResponse | null>(
-        this.getUrl("receiveNotification"),
-        {
-          params: {
-            receiveTimeout,
-          },
-        },
-      );
+        return response.data.stateInstance;
+    }
 
-    return response.data;
-  }
+    async sendMessage(
+        data: SendMessageRequest,
+    ): Promise<SendMessageResponse> {
+        const response =
+            await this.client.post<SendMessageResponse>(
+                this.getUrl(
+                    "sendMessage",
+                ),
+                data,
+            );
+
+        return response.data;
+    }
+
+    async receiveNotification(
+        receiveTimeout = 5,
+    ): Promise<
+        ReceiveNotificationResponse | null
+    > {
+        const response =
+            await this.client.get<
+                ReceiveNotificationResponse | null
+            >(
+                this.getUrl(
+                    "receiveNotification",
+                ),
+                {
+                    params: {
+                        receiveTimeout,
+                    },
+                },
+            );
+
+        return response.data;
+    }
 }
