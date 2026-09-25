@@ -1,0 +1,36 @@
+.header {
+  height: 64px;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 0 20px;
+
+  background: #f0f0f0;
+  border-bottom: 1px solid #ddd;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #ddd;
+}
+
+.title {
+  font-weight: 500;
+}
+
+.status {
+  margin-top: 2px;
+
+  color: #888;
+  font-size: 12px;
+}
